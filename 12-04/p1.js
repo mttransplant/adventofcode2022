@@ -2,6 +2,11 @@
 // https://adventofcode.com/2022
 // Adam Smith
 
+const pickFile = {
+    example: 'Example',
+    input: 'Input'
+}
+
 const ingestFile = file => {
     const fs = require('fs');
     const thisFile = fs.readFileSync(__dirname + '/' + file + '.txt', 'utf-8');
@@ -46,16 +51,15 @@ class Pair {
     get assignment2() {
         return this.#assignment2;
     }
-    #contains(a, b) { // check if b is fully contained in a
+    #aContainsB(a, b) { // check if b is fully contained in a
         return a.min <= b.min && a.max >= b.max;
     }
-    fullyContains() {
-        return this.#contains(this.#assignment1, this.#assignment2) || this.#contains(this.#assignment2, this.#assignment1);
+    hasFullContainment() {
+        return this.#aContainsB(this.#assignment1, this.#assignment2) || this.#aContainsB(this.#assignment2, this.#assignment1);
     }
 }
 
-const loadPairings = () => {
-    const file = 'Input';
+const loadPairings = (file) => {
     const pairingsText = ingestFile(file);
     return pairingsText.map(pair => new Pair(pair));
 }
@@ -64,7 +68,7 @@ const countContained = (containsList) => {
     return containsList.reduce((acc, curr) => curr ? acc + 1 : acc, 0);
 }
 
-const pairings = loadPairings();
-const containResults = pairings.map(pair => pair.fullyContains());
+const pairings = loadPairings(pickFile.input);
+const containResults = pairings.map(pair => pair.hasFullContainment());
 const count = countContained(containResults);
 console.log(count);
