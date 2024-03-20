@@ -33,9 +33,12 @@ class Stack {
 class Stacks {
     #stackLines;
     #stacks;
-    constructor(stackLines) {
-        this.#stackLines = stackLines;
+    constructor(fileLines) {
+        this.#stackLines = this.#loadStackLines(fileLines);
         this.#stacks = this.#parseStacks(this.#stackLines);
+    }
+    #loadStackLines(fileLines) {
+        return fileLines.slice(0, fileLines.indexOf(''));
     }
     #parsePositions(positionRow) {
         const positionArr = positionRow.split('').map(val => Number(val));
@@ -76,8 +79,11 @@ class Stacks {
 class Instructions {
     #instructions;
     #counter = 0;
-    constructor(instructions) {
-        this.#instructions = instructions;
+    constructor(fileLines) {
+        this.#instructions = this.#loadInstructionLines(fileLines);
+    }
+    #loadInstructionLines(fileLines) {
+        return fileLines.slice(fileLines.indexOf('') + 1);
     }
     #parseInstruction(instructionLine) {
         const instructionParts = instructionLine.split(' ');
@@ -94,14 +100,6 @@ class Instructions {
     }
 }
 
-const loadStackLines = fileLines => {
-    return fileLines.slice(0, fileLines.indexOf(''));
-}
-
-const loadInstructionLines = fileLines => {
-    return fileLines.slice(fileLines.indexOf('') + 1);
-}
-
 const executeInstructions = (instructions, stacks) => {
     let instruction;
     for (let i = 0; i < instructions.instructionCount; i++) {
@@ -114,8 +112,8 @@ const executeInstructions = (instructions, stacks) => {
 
 const run = () => {
     const fileLines = readFile(pickFile.input);
-    const stacks = new Stacks(loadStackLines(fileLines));
-    const instructions = new Instructions(loadInstructionLines(fileLines));
+    const stacks = new Stacks(fileLines);
+    const instructions = new Instructions(fileLines);
     executeInstructions(instructions, stacks);
     return stacks.topCrates();
 }
