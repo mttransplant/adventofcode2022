@@ -2,10 +2,7 @@
 // https://adventofcode.com/2022
 // Adam Smith
 
-const pickFile = {
-    example: 'Example',
-    input: 'Input'
-}
+const pickFile = { example: 'Example', input: 'Input' }
 
 const readFile = file => {
     const fs = require('fs');
@@ -26,7 +23,7 @@ class Stack {
         this.#stack.push(crate);
     }
     topCrate() {
-        return this.#stack[this.#stack.length -1];
+        return this.#stack[this.#stack.length - 1];
     }
 }
 
@@ -72,38 +69,35 @@ class Stacks {
     }
     topCrates() {
         const tops = this.#stacks.map(stack => stack.topCrate());
-        return tops.toString().replaceAll(',','');
+        return tops.toString().replaceAll(',', '');
     }
 }
 
 class Instructions {
+    #instructionsList;
     #instructions;
-    #counter = 0;
     constructor(fileLines) {
-        this.#instructions = this.#loadInstructionLines(fileLines);
+        this.#instructionsList = this.#loadInstructionLines(fileLines);
+        this.#instructions = this.#parseInstructions(this.#instructionsList);
     }
     #loadInstructionLines(fileLines) {
         return fileLines.slice(fileLines.indexOf('') + 1);
     }
+    #parseInstructions(instructionsList) {
+        return this.#instructionsList.map(instruction => this.#parseInstruction(instruction));
+    }
     #parseInstruction(instructionLine) {
-        const instructionParts = instructionLine.split(' ');
-        const instruction = { move: Number(instructionParts[1]), from: Number(instructionParts[3]), to: Number(instructionParts[5]) };
+        const parts = instructionLine.split(' ');
+        const instruction = { move: Number(parts[1]), from: Number(parts[3]), to: Number(parts[5]) };
         return instruction;
     }
-    get instructionCount() {
-        return this.#instructions.length;
-    }
-    nextInstruction() {
-        const instructionLine = this.#instructions[this.#counter];
-        this.#counter++;
-        return this.#parseInstruction(instructionLine);
+    get allInstructions() {
+        return this.#instructions;
     }
 }
 
 const executeInstructions = (instructions, stacks) => {
-    let instruction;
-    for (let i = 0; i < instructions.instructionCount; i++) {
-        instruction = instructions.nextInstruction();
+    for (let instruction of instructions.allInstructions) {
         for (let j = 0; j < instruction.move; j++) {
             stacks.moveCrate(instruction.from, instruction.to);
         }
