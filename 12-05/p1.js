@@ -88,8 +88,7 @@ class Instructions {
     }
     #parseInstruction(instructionLine) {
         const parts = instructionLine.split(' ');
-        const instruction = { move: Number(parts[1]), from: Number(parts[3]), to: Number(parts[5]) };
-        return instruction;
+        return { move: Number(parts[1]), from: Number(parts[3]), to: Number(parts[5]) };
     }
     get allInstructions() {
         return this.#instructions;
