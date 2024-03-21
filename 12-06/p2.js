@@ -32,7 +32,7 @@ const run = () => {
     const datastream = fileLines[0].split('');
     const packetMarkerEnd = findMarker(datastream, 4);
     const messageMarkerEnd = findMarker(datastream, 14);
-    return messageMarkerEnd;
+    return `Packet Marker End is ${packetMarkerEnd} and Message Marker End is ${messageMarkerEnd}`;
 }
 
 const outcome = run();
