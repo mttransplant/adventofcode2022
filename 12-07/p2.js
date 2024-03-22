@@ -61,9 +61,9 @@ class Directory {
     size() {
         return this.#calcSizeFiles() + this.#calcSizeDirs();
     }
-    specialSize(sizeArray) {
+    specialSize(sizeArray = []) {
         const thisSize = this.size();
-        if (thisSize <= 100000) sizeArray.push(thisSize);
+        if (thisSize <= 100000) sizeArray.push(this.size());
         this.#directories.forEach(dir => dir.specialSize(sizeArray));
         return sizeArray;
     }

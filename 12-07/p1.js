@@ -61,13 +61,11 @@ class Directory {
     size() {
         return this.#calcSizeFiles() + this.#calcSizeDirs();
     }
-    specialSize(size) {
+    specialSize(sizeArray = []) {
         const thisSize = this.size();
-        // if (thisSize <= 100000) sizeArray.push[thisSize];
-        if (thisSize <= 100000) size += thisSize;
-        // this.#directories.forEach(dir => dir.specialSize(sizeArray));
-        size = this.#directories.reduce((acc, dir) => dir.specialSize(acc), size);
-        return size;
+        if (thisSize <= 100000) sizeArray.push(this.size());
+        this.#directories.forEach(dir => dir.specialSize(sizeArray));
+        return sizeArray;
     }
 }
 
@@ -115,7 +113,8 @@ const parseCommands = fileLines => {
 const run = () => {
     const fileLines = readFile(pickFile.input);
     const root = parseCommands(fileLines);
-    const special = root.specialSize(0);
+    const sizeArray = root.specialSize();
+    const special = sizeArray.reduce((acc, curr) => acc + curr, 0);
     return special;
 }
 
